@@ -2,203 +2,283 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<title>Gestionale RP</title>
+<title>Gestionale Roleplay</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  /* --- BODY --- */
-  body {
-    margin:0;
-    font-family: 'Roboto', sans-serif;
-    background: linear-gradient(135deg,#0f172a,#1e293b);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-    overflow:hidden;
-    color:white;
-  }
+/* --- BODY & SFONDO --- */
+body {
+  margin:0;
+  font-family:'Roboto', sans-serif;
+  background:#1a1a1a;
+  background: radial-gradient(circle, #2a2a2a 0%, #1a1a1a 100%);
+  color:white;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  overflow:hidden;
+  position:relative;
+}
 
-  /* --- CARD CENTRALE --- */
-  .card-container {
-    background: rgba(30,41,59,0.95);
-    padding:50px 40px;
-    border-radius:20px;
-    box-shadow: 0 0 30px rgba(0,0,0,0.5);
-    text-align:center;
-    width:350px;
-    animation: fadeSlide 1s ease forwards;
-  }
+/* Effetto "polvere" sullo sfondo */
+body::after {
+  content:"";
+  position:absolute;
+  width:100%;
+  height:100%;
+  background:radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size:20px 20px;
+  pointer-events:none;
+  top:0;
+  left:0;
+}
 
-  /* --- TITOLO --- */
-  h1 {
-    font-size:2.5em;
-    margin-bottom:20px;
-  }
+/* --- HEADER --- */
+.header {
+  text-align:center;
+  margin-bottom:40px;
+}
 
-  p {
-    font-size:1em;
-    color:#cbd5e1;
-  }
+.header h1 {
+  font-weight:900;
+  font-size:3em;
+  text-transform:uppercase;
+  color:white;
+  text-shadow:0 0 10px rgba(255,255,255,0.2);
+  margin:0;
+  position:relative;
+  display:inline-block;
+}
 
-  /* --- PULSANTI --- */
-  .btn {
-    background-color:#2563eb;
-    border:none;
-    border-radius:12px;
-    padding:15px 30px;
-    font-size:1.2em;
-    color:white;
-    cursor:pointer;
-    transition: all 0.3s ease;
-    margin-top:20px;
-  }
+.header .linea-centrale {
+  width:300px;
+  height:2px;
+  background:#ffcc00;
+  margin:10px auto 0;
+  position:relative;
+}
 
-  .btn:hover {
-    background-color:#1d4ed8;
-    transform: scale(1.05);
-    box-shadow: 0 0 15px #2563eb;
-  }
+.header .rombo {
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  top:-10px;
+  width:20px;
+  height:20px;
+  background:#ffcc00;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:12px;
+}
 
-  /* --- LOGIN & REGISTRAZIONE --- */
-  .form-box {
-    margin-top:30px;
-    display:none;
-    text-align:left;
-  }
+/* --- CARD CENTRALE --- */
+.card {
+  display:flex;
+  flex-direction:row;
+  background:#2a2a2a;
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.5);
+  overflow:hidden;
+  width:700px;
+  max-width:90%;
+  padding:30px;
+}
 
-  .form-box input {
-    width:100%;
-    padding:12px;
-    margin-bottom:15px;
-    border-radius:8px;
-    border:none;
-    font-size:1em;
-  }
+/* Sinistra: Illustrazione minimal */
+.card .illustration {
+  flex:1;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  position:relative;
+}
 
-  .link-switch {
-    color:#2563eb;
-    cursor:pointer;
-    text-decoration:underline;
-    font-size:0.95em;
-  }
+.card .illustration .graph {
+  width:100px;
+  height:100px;
+  background:#ffcc00;
+  display:grid;
+  grid-template-columns:repeat(5,10px);
+  grid-gap:5px;
+}
 
-  /* --- DASHBOARD --- */
-  .dashboard {
-    display:none;
-    text-align:center;
-  }
+.card .illustration .graph div {
+  background:#ffcc00;
+  width:10px;
+  transition:0.3s;
+}
 
-  .dashboard .card {
-    background:#1e293b;
-    padding:25px;
-    border-radius:12px;
-    margin-top:20px;
-    font-size:1.2em;
-  }
+.card .illustration .graph div:hover {
+  background:#00ffcc;
+}
 
-  /* --- ANIMAZIONI --- */
-  @keyframes fadeSlide {
-    from{opacity:0; transform:translateY(30px);}
-    to{opacity:1; transform:translateY(0);}
-  }
+/* Destra: testo + bottone */
+.card .content {
+  flex:1.5;
+  padding-left:30px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
 
+.card .content h2 {
+  margin:0 0 10px 0;
+  font-weight:bold;
+  font-size:1.5em;
+  color:white;
+}
+
+.card .content p {
+  color:#d1d5db;
+  font-size:1em;
+  margin-bottom:20px;
+}
+
+.card .content .btn {
+  background:#5865F2;
+  color:white;
+  font-weight:bold;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.card .content .btn:hover {
+  transform:scale(1.05);
+  box-shadow:0 0 15px #5865F2;
+}
+
+/* --- FOOTER BOX --- */
+.footer {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:#2a2a2a;
+  border-radius:15px;
+  border-left:5px solid #ffcc00;
+  padding:15px 20px;
+  margin-top:30px;
+  width:700px;
+  max-width:90%;
+  box-shadow:0 5px 20px rgba(0,0,0,0.4);
+}
+
+.footer .text {
+  color:#d1d5db;
+}
+
+.footer .btn-footer {
+  background:#3a3a3a;
+  color:white;
+  border-radius:10px;
+  padding:10px 20px;
+  border:1px solid rgba(255,255,255,0.1);
+  display:flex;
+  align-items:center;
+  transition:0.3s;
+  cursor:pointer;
+}
+
+.footer .btn-footer:hover {
+  transform:scale(1.05);
+  box-shadow:0 0 10px #ff0000;
+}
+
+.footer .btn-footer img {
+  width:20px;
+  margin-right:10px;
+}
+
+/* --- LOGIN / REGISTRAZIONE HIDDEN --- */
+.login-box, .register-box, .dashboard {
+  display:none;
+}
+
+/* --- ANIMAZIONI --- */
+@keyframes fadeInUp {
+  from {opacity:0; transform:translateY(30px);}
+  to {opacity:1; transform:translateY(0);}
+}
 </style>
 </head>
 <body>
 
+<!-- HEADER -->
+<div class="header">
+  <h1>GESTIONALE ROLEPLAY</h1>
+  <div class="linea-centrale">
+    <div class="rombo">💻</div>
+  </div>
+</div>
+
 <!-- CARD CENTRALE -->
-<div class="card-container" id="welcomeCard">
-  <h1>Benvenuto</h1>
-  <p>Accedi per consultare il tuo account e gestire il tuo personaggio.</p>
-  <button class="btn" id="connectBtn">Collega account</button>
-
-  <!-- LOGIN -->
-  <div class="form-box" id="loginBox">
-    <h3>Login</h3>
-    <form id="loginForm">
-      <input type="text" name="nickname" placeholder="Nickname" required>
-      <input type="password" name="password" placeholder="Password" required>
-      <button class="btn" type="submit">Accedi</button>
-    </form>
-    <p>Non hai un account? <span class="link-switch" id="showRegister">Registrati</span></p>
+<div class="card">
+  <div class="illustration">
+    <div class="graph">
+      <div style="height:30%;"></div>
+      <div style="height:50%;"></div>
+      <div style="height:70%;"></div>
+      <div style="height:40%;"></div>
+      <div style="height:60%;"></div>
+    </div>
   </div>
+  <div class="content">
+    <h2>Accesso richiesto</h2>
+    <p>Il gestionale è un'app esclusiva del Roleplay per consultare in tempo reale tutti i tuoi dati di gioco e accedere a funzioni lavorative e riservate.</p>
+    <button class="btn" id="connectBtn">Collega account</button>
 
-  <!-- REGISTRAZIONE -->
-  <div class="form-box" id="registerBox">
-    <h3>Registrazione</h3>
-    <form id="registerForm">
-      <input type="text" name="nome" placeholder="Nome" required>
-      <input type="text" name="cognome" placeholder="Cognome" required>
-      <input type="text" name="nickingame" placeholder="Nickingame" required>
-      <input type="text" name="username" placeholder="Username per il server" required>
-      <input type="password" name="password" placeholder="Password" required>
-      <button class="btn" type="submit">Registrati</button>
-    </form>
-    <p>Hai già un account? <span class="link-switch" id="showLogin">Login</span></p>
+    <!-- LOGIN HIDDEN -->
+    <div class="login-box" id="loginBox">
+      <form id="loginForm">
+        <input type="text" name="nickname" placeholder="Nickname" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button class="btn" type="submit">Accedi</button>
+      </form>
+      <p>Non hai un account? <span id="showRegister" style="color:#ffcc00; cursor:pointer;">Registrati</span></p>
+    </div>
+
+    <!-- REGISTRAZIONE HIDDEN -->
+    <div class="register-box" id="registerBox">
+      <form id="registerForm">
+        <input type="text" name="nome" placeholder="Nome" required>
+        <input type="text" name="cognome" placeholder="Cognome" required>
+        <input type="text" name="nickingame" placeholder="Nickingame" required>
+        <input type="text" name="username" placeholder="Username per il server" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button class="btn" type="submit">Registrati</button>
+      </form>
+      <p>Hai già un account? <span id="showLogin" style="color:#ffcc00; cursor:pointer;">Login</span></p>
+    </div>
   </div>
 </div>
 
-<!-- DASHBOARD MINIMA -->
-<div class="dashboard" id="dashboard">
-  <div class="card">
-    <h2 id="nickname">Nickname: ---</h2>
-    <p id="balance">Balance: $0,0</p>
-  </div>
+<!-- FOOTER -->
+<div class="footer">
+  <div class="text"><strong>Non sei collegato?</strong> Se hai difficoltà consulta il tutorial.</div>
+  <div class="btn-footer"><img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube">Guarda il tutorial</div>
 </div>
 
+<!-- SCRIPT -->
 <script>
 const connectBtn = document.getElementById('connectBtn');
 const loginBox = document.getElementById('loginBox');
 const registerBox = document.getElementById('registerBox');
-const welcomeCard = document.getElementById('welcomeCard');
-const dashboard = document.getElementById('dashboard');
-const nicknameField = document.getElementById('nickname');
-const balanceField = document.getElementById('balance');
 
 connectBtn.addEventListener('click', ()=>{
   loginBox.style.display='block';
   connectBtn.style.display='none';
 });
 
-// Switch tra login e registrazione
+// Switch login / register
 document.getElementById('showRegister').addEventListener('click', ()=>{
   loginBox.style.display='none';
   registerBox.style.display='block';
 });
 document.getElementById('showLogin').addEventListener('click', ()=>{
-  registerBox.style.display='none';
-  loginBox.style.display='block';
-});
-
-// LOGIN
-document.getElementById('loginForm').addEventListener('submit', async function(e){
-  e.preventDefault();
-  const nickname = this.nickname.value;
-  const password = this.password.value;
-
-  const res = await fetch('/login',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({nickname,password})
-  });
-
-  const text = await res.text();
-  if(text.includes("Utente non trovato") || text.includes("Password errata")){
-    alert(text);
-    return;
-  }
-
-  // Mostra dashboard minima
-  welcomeCard.style.display='none';
-  dashboard.style.display='block';
-  nicknameField.textContent="Nickname: "+nickname;
-  balanceField.textContent="Balance: $0,0";
-});
-
-// REGISTRAZIONE (solo frontend per ora)
-document.getElementById('registerForm').addEventListener('submit', function(e){
-  e.preventDefault();
-  alert('Registrazione completata! Ora puoi fare login.');
   registerBox.style.display='none';
   loginBox.style.display='block';
 });
