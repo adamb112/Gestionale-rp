@@ -1,1 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gestionale RP</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #0f172a;
+            color: white;
+        }
+
+        .navbar {
+            background-color: #1e293b;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .container {
+            padding: 30px;
+        }
+
+        .card {
+            background-color: #1e293b;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .button {
+            background-color: #2563eb;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <h1>Gestionale RP</h1>
+    <a href="/login" class="button">Login</a>
+</div>
+
+<div class="container">
+    <div class="grid">
+        <div class="card">
+            <h2>👤 Profilo</h2>
+            <p>Balance: ---</p>
+            <p>Tempo Totale: ---</p>
+            <p>Tempo Settimanale: ---</p>
+            <p>Lavoro: ---</p>
+        </div>
+
+        <div class="card">
+            <h2>⚖️ Sanzioni</h2>
+            <p>Multe: ---</p>
+            <p>Ban: ---</p>
+            <p>Mute: ---</p>
+            <p>Morti: ---</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
 
