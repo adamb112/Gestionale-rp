@@ -2,142 +2,129 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<title>Gestionale RP - Login/Registrazione</title>
+<title>Gestionale RP</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 <style>
+  /* --- BODY --- */
   body {
     margin:0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Roboto', sans-serif;
     background: linear-gradient(135deg,#0f172a,#1e293b);
-    color:white;
     display:flex;
     justify-content:center;
     align-items:center;
     height:100vh;
     overflow:hidden;
-    position:relative;
+    color:white;
   }
 
-  /* LINEE CURVE ANIMATE */
-  .linea {
-    position:absolute;
-    border:2px solid #2563eb;
-    border-radius:50%;
-    width:200px;
-    height:200px;
-    animation: rotate 15s linear infinite;
-    transition: border-color 0.3s;
-  }
-
-  .linea:hover { border-color:#f59e0b; }
-
-  .linea:nth-child(1){top:-50px; left:-50px;}
-  .linea:nth-child(2){bottom:-50px; right:-50px; animation-delay: 7s;}
-  .linea:nth-child(3){top:-50px; right:-50px; animation-delay: 3s;}
-  .linea:nth-child(4){bottom:-50px; left:-50px; animation-delay: 10s;}
-
-  @keyframes rotate{
-    0%{transform:rotate(0deg);}
-    100%{transform:rotate(360deg);}
-  }
-
-  /* WELCOME BOX */
-  .welcome-container {
-    text-align:center;
-    animation: fadeIn 1.5s ease forwards;
-    background: rgba(30,41,59,0.8);
-    padding:50px;
+  /* --- CARD CENTRALE --- */
+  .card-container {
+    background: rgba(30,41,59,0.95);
+    padding:50px 40px;
     border-radius:20px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    text-align:center;
+    width:350px;
+    animation: fadeSlide 1s ease forwards;
   }
 
-  .welcome-text {
-    font-size:4em;
-    font-weight:bold;
-    margin-bottom:30px;
-    opacity:0;
-    animation: slideIn 2s forwards;
+  /* --- TITOLO --- */
+  h1 {
+    font-size:2.5em;
+    margin-bottom:20px;
   }
 
+  p {
+    font-size:1em;
+    color:#cbd5e1;
+  }
+
+  /* --- PULSANTI --- */
   .btn {
     background-color:#2563eb;
-    padding:15px 30px;
     border:none;
     border-radius:12px;
+    padding:15px 30px;
+    font-size:1.2em;
     color:white;
     cursor:pointer;
-    font-size:1.5em;
-    transition:0.3s;
+    transition: all 0.3s ease;
     margin-top:20px;
   }
 
   .btn:hover {
     background-color:#1d4ed8;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #2563eb;
   }
 
-  .login-box, .register-box {
-    background:#1e293b;
-    padding:30px;
-    border-radius:12px;
-    margin-top:20px;
-    max-width:350px;
+  /* --- LOGIN & REGISTRAZIONE --- */
+  .form-box {
+    margin-top:30px;
     display:none;
-    animation: fadeSlide 0.5s forwards;
     text-align:left;
   }
 
-  .login-box input, .register-box input {
+  .form-box input {
     width:100%;
-    padding:10px;
+    padding:12px;
     margin-bottom:15px;
-    border-radius:5px;
+    border-radius:8px;
     border:none;
+    font-size:1em;
   }
 
+  .link-switch {
+    color:#2563eb;
+    cursor:pointer;
+    text-decoration:underline;
+    font-size:0.95em;
+  }
+
+  /* --- DASHBOARD --- */
   .dashboard {
-    text-align:center;
     display:none;
+    text-align:center;
   }
 
-  .card {
+  .dashboard .card {
     background:#1e293b;
     padding:25px;
     border-radius:12px;
     margin-top:20px;
-    display:inline-block;
-    min-width:250px;
-    font-size:1.3em;
+    font-size:1.2em;
   }
 
-  @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
-  @keyframes slideIn { from{opacity:0; transform:translateY(-50px);} to{opacity:1; transform:translateY(0);} }
-  @keyframes fadeSlide { from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);} }
+  /* --- ANIMAZIONI --- */
+  @keyframes fadeSlide {
+    from{opacity:0; transform:translateY(30px);}
+    to{opacity:1; transform:translateY(0);}
+  }
 
 </style>
 </head>
 <body>
 
-<!-- LINEE CURVE -->
-<div class="linea"></div>
-<div class="linea"></div>
-<div class="linea"></div>
-<div class="linea"></div>
-
-<div class="welcome-container">
-  <div class="welcome-text">Benvenuto</div>
+<!-- CARD CENTRALE -->
+<div class="card-container" id="welcomeCard">
+  <h1>Benvenuto</h1>
+  <p>Accedi per consultare il tuo account e gestire il tuo personaggio.</p>
   <button class="btn" id="connectBtn">Collega account</button>
 
   <!-- LOGIN -->
-  <div class="login-box" id="loginBox">
+  <div class="form-box" id="loginBox">
     <h3>Login</h3>
     <form id="loginForm">
       <input type="text" name="nickname" placeholder="Nickname" required>
       <input type="password" name="password" placeholder="Password" required>
       <button class="btn" type="submit">Accedi</button>
     </form>
-    <p>Non hai un account? <span id="showRegister" style="cursor:pointer; text-decoration:underline;">Registrati</span></p>
+    <p>Non hai un account? <span class="link-switch" id="showRegister">Registrati</span></p>
   </div>
 
   <!-- REGISTRAZIONE -->
-  <div class="register-box" id="registerBox">
+  <div class="form-box" id="registerBox">
     <h3>Registrazione</h3>
     <form id="registerForm">
       <input type="text" name="nome" placeholder="Nome" required>
@@ -147,11 +134,11 @@
       <input type="password" name="password" placeholder="Password" required>
       <button class="btn" type="submit">Registrati</button>
     </form>
-    <p>Hai già un account? <span id="showLogin" style="cursor:pointer; text-decoration:underline;">Login</span></p>
+    <p>Hai già un account? <span class="link-switch" id="showLogin">Login</span></p>
   </div>
 </div>
 
-<!-- DASHBOARD -->
+<!-- DASHBOARD MINIMA -->
 <div class="dashboard" id="dashboard">
   <div class="card">
     <h2 id="nickname">Nickname: ---</h2>
@@ -163,17 +150,17 @@
 const connectBtn = document.getElementById('connectBtn');
 const loginBox = document.getElementById('loginBox');
 const registerBox = document.getElementById('registerBox');
-const welcomeContainer = document.querySelector('.welcome-container');
+const welcomeCard = document.getElementById('welcomeCard');
 const dashboard = document.getElementById('dashboard');
 const nicknameField = document.getElementById('nickname');
 const balanceField = document.getElementById('balance');
 
 connectBtn.addEventListener('click', ()=>{
-  loginBox.style.display = 'block';
-  connectBtn.style.display = 'none';
+  loginBox.style.display='block';
+  connectBtn.style.display='none';
 });
 
-// SWITCH LOGIN / REGISTER
+// Switch tra login e registrazione
 document.getElementById('showRegister').addEventListener('click', ()=>{
   loginBox.style.display='none';
   registerBox.style.display='block';
@@ -189,10 +176,10 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
   const nickname = this.nickname.value;
   const password = this.password.value;
 
-  const res = await fetch('/login', {
+  const res = await fetch('/login',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({nickname,password})
+    body:JSON.stringify({nickname,password})
   });
 
   const text = await res.text();
@@ -201,14 +188,14 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     return;
   }
 
-  // Dashboard minima
-  welcomeContainer.style.display='none';
+  // Mostra dashboard minima
+  welcomeCard.style.display='none';
   dashboard.style.display='block';
-  nicknameField.textContent = "Nickname: " + nickname;
-  balanceField.textContent = "Balance: $0,0";
+  nicknameField.textContent="Nickname: "+nickname;
+  balanceField.textContent="Balance: $0,0";
 });
 
-// REGISTRAZIONE (solo frontend, per ora)
+// REGISTRAZIONE (solo frontend per ora)
 document.getElementById('registerForm').addEventListener('submit', function(e){
   e.preventDefault();
   alert('Registrazione completata! Ora puoi fare login.');
