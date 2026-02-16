@@ -4,6 +4,7 @@ const { Pool } = require("pg");
 const bcrypt = require("bcrypt");
 
 const app = express();
+app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -19,8 +20,10 @@ const pool = new Pool({
 });
 
 app.get("/", (req, res) => {
-  if (!req.session.user) return res.send("Non loggato. Vai su /login");
-  res.send("Benvenuto " + req.session.user.email);
+  if (!req.session.user) {
+    return res.redirect("/login");
+  }
+  res.sendFile(__dirname + "/public/index.html");
 });
 
 app.get("/login", (req, res) => {
