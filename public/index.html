@@ -1,84 +1,159 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
-    <title>Gestionale RP</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #0f172a;
-            color: white;
-        }
+<meta charset="UTF-8">
+<title>Gestionale RP - Login</title>
+<style>
+  body {
+    margin:0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg,#0f172a,#1e293b);
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    overflow:hidden;
+  }
 
-        .navbar {
-            background-color: #1e293b;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-        }
+  .welcome-container {
+    text-align:center;
+    animation: fadeIn 2s ease forwards;
+  }
 
-        .navbar h1 {
-            margin: 0;
-            font-size: 20px;
-        }
+  .welcome-text {
+    font-size:3em;
+    margin-bottom:30px;
+    opacity:0;
+    animation: slideIn 2s forwards;
+  }
 
-        .container {
-            padding: 30px;
-        }
+  .btn {
+    background-color:#2563eb;
+    padding:15px 30px;
+    border:none;
+    border-radius:8px;
+    color:white;
+    cursor:pointer;
+    font-size:1.2em;
+    transition: 0.3s;
+    margin-top:20px;
+  }
 
-        .card {
-            background-color: #1e293b;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
+  .btn:hover {
+    background-color:#1d4ed8;
+  }
 
-        .card h2 {
-            margin-top: 0;
-        }
+  .login-box {
+    background:#1e293b;
+    padding:30px;
+    border-radius:12px;
+    margin-top:20px;
+    max-width:300px;
+    display:none;
+    animation: fadeSlide 0.5s forwards;
+  }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
+  .login-box input {
+    width:100%;
+    padding:10px;
+    margin-bottom:15px;
+    border-radius:5px;
+    border:none;
+  }
 
-        .button {
-            background-color: #2563eb;
-            padding: 10px 15px;
-            border-radius: 5px;
-            text-decoration: none;
-            color: white;
-            display: inline-block;
-        }
-    </style>
+  .dashboard {
+    text-align:center;
+    display:none;
+  }
+
+  .card {
+    background:#1e293b;
+    padding:25px;
+    border-radius:12px;
+    margin-top:20px;
+    display:inline-block;
+    min-width:200px;
+  }
+
+  @keyframes fadeIn {
+    from{opacity:0;}
+    to{opacity:1;}
+  }
+
+  @keyframes slideIn {
+    from{opacity:0; transform:translateY(-50px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+
+  @keyframes fadeSlide {
+    from{opacity:0; transform:translateY(20px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+</style>
 </head>
 <body>
 
-<div class="navbar">
-    <h1>Gestionale RP</h1>
-    <a href="/login" class="button">Login</a>
+<div class="welcome-container">
+  <div class="welcome-text">Benvenuto</div>
+  <button class="btn" id="connectBtn">Collega account</button>
+
+  <div class="login-box" id="loginBox">
+    <form id="loginForm">
+      <input type="email" name="email" placeholder="Email" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <button class="btn" type="submit">Login</button>
+    </form>
+  </div>
 </div>
 
-<div class="container">
-    <div class="grid">
-        <div class="card">
-            <h2>👤 Profilo</h2>
-            <p>Balance: ---</p>
-            <p>Tempo Totale: ---</p>
-            <p>Tempo Settimanale: ---</p>
-            <p>Lavoro: ---</p>
-        </div>
-
-        <div class="card">
-            <h2>⚖️ Sanzioni</h2>
-            <p>Multe: ---</p>
-            <p>Ban: ---</p>
-            <p>Mute: ---</p>
-            <p>Morti: ---</p>
-        </div>
-    </div>
+<div class="dashboard" id="dashboard">
+  <div class="card">
+    <h2 id="nickname">Nickname: ---</h2>
+    <p id="balance">Balance: $0,0</p>
+  </div>
 </div>
+
+<script>
+const connectBtn = document.getElementById('connectBtn');
+const loginBox = document.getElementById('loginBox');
+const welcomeContainer = document.querySelector('.welcome-container');
+const dashboard = document.getElementById('dashboard');
+const nicknameField = document.getElementById('nickname');
+const balanceField = document.getElementById('balance');
+
+connectBtn.addEventListener('click', ()=>{
+  loginBox.style.display = 'block';
+  connectBtn.style.display = 'none';
+});
+
+document.getElementById('loginForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+  const email = this.email.value;
+  const password = this.password.value;
+
+  // POST al server
+  const res = await fetch('/login', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({email,password})
+  });
+
+  const text = await res.text();
+  if(text.includes("Utente non trovato") || text.includes("Password errata")){
+    alert(text);
+    return;
+  }
+
+  // Se login OK
+  welcomeContainer.style.display = 'none';
+  dashboard.style.display = 'block';
+
+  // Mostra dati base (Nickname e Balance)
+  nicknameField.textContent = "Nickname: " + email;
+  balanceField.textContent = "Balance: $0,0";
+});
+</script>
 
 </body>
 </html>
