@@ -3,251 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestionale Roleplay | Sistema Integrato</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>Gestionale Roleplay | Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #080808;
-            --card-bg: rgba(20, 20, 20, 0.8);
+            --bg-body: #121212;
+            --bg-card: #1a1a1a;
             --primary-gold: #ffcc00;
-            --accent-blue: #00d4ff;
-            --text-main: #ffffff;
-            --text-dim: #a0a0a0;
-            --curve: 40px;
+            --text-dim: #888;
+            --curve: 20px;
         }
 
         body {
-            margin: 0; padding: 0;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: var(--bg-dark);
-            color: var(--text-main);
-            display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; overflow: hidden;
+            margin: 0; font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at center, #1e1e1e 0%, #0f0f0f 100%);
+            color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center;
         }
 
-        /* --- SFONDO DINAMICO --- */
-        .bg-gradient {
-            position: absolute; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 50%, #151515 0%, #080808 100%);
-            z-index: -2;
-        }
+        /* --- LOGIN SCREEN --- */
+        #loginScreen { width: 100%; max-width: 800px; padding: 20px; animation: fadeIn 0.5s; }
+        .login-card { background: var(--bg-card); border-radius: var(--curve); padding: 40px; display: flex; gap: 40px; align-items: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .illustration { flex: 1; background: #222; border-radius: 15px; height: 180px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .bars { display: flex; gap: 5px; align-items: flex-end; height: 50px; }
+        .bar { width: 8px; background: var(--primary-gold); border-radius: 4px; animation: pulse 1.5s infinite; }
 
-        .glow-orb {
-            position: absolute; width: 500px; height: 500px;
-            background: radial-gradient(circle, rgba(255, 204, 0, 0.05) 0%, transparent 70%);
-            z-index: -1; animation: pulse 8s infinite alternate;
-        }
+        /* --- DASHBOARD LAYOUT --- */
+        #mainDashboard { display: none; width: 100%; height: 100vh; display: none; padding: 40px; box-sizing: border-box; }
+        .sidebar { position: fixed; left: 30px; top: 50%; transform: translateY(-50%); background: var(--bg-card); padding: 15px; border-radius: 30px; display: flex; flex-direction: column; gap: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .side-btn { width: 45px; height: 45px; border-radius: 12px; border: none; background: #222; color: white; cursor: pointer; transition: 0.3s; font-size: 1.2rem; }
+        .side-btn.active { background: var(--primary-gold); color: black; box-shadow: 0 0 15px var(--primary-gold); }
 
-        @keyframes pulse { from { transform: scale(1); opacity: 0.5; } to { transform: scale(1.3); opacity: 0.8; } }
+        /* --- CONTENUTO DINAMICO --- */
+        .content-area { max-width: 1100px; margin: 0 auto; width: 100%; }
+        .profile-header { display: flex; align-items: center; gap: 25px; margin-bottom: 40px; }
+        .avatar { width: 100px; height: 100px; background: #333; border-radius: 20px; border: 3px solid var(--primary-gold); overflow: hidden; }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* --- WRAPPER --- */
-        .container {
-            width: 100%; max-width: 850px;
-            display: flex; flex-direction: column; align-items: center;
-            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-        }
+        .section-title { font-size: 0.8rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 30px; display: flex; align-items: center; gap: 10px; }
+        .section-title i { color: var(--primary-gold); }
 
-        /* --- HEADER --- */
-        .header { text-align: center; margin-bottom: 40px; }
-        .header h1 { font-weight: 800; font-size: 3.5rem; margin: 0; letter-spacing: -2px; }
-        .divider { display: flex; align-items: center; justify-content: center; gap: 15px; margin-top: 10px; }
-        .divider .line { width: 80px; height: 1px; background: var(--primary-gold); }
-        .divider .dot { transform: rotate(45deg); width: 8px; height: 8px; background: var(--primary-gold); box-shadow: 0 0 10px var(--primary-gold); }
+        .grid-stats { display: grid; grid-template-columns: 1.5fr 1fr; gap: 25px; }
+        .stat-box { background: var(--bg-card); border-radius: var(--curve); padding: 25px; }
+        .inner-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
+        .mini-card { background: #222; padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .mini-card span { font-size: 0.7rem; color: var(--text-dim); }
+        .mini-card p { margin: 5px 0 0; font-weight: 700; font-size: 1.1rem; }
 
-        /* --- CARD PRINCIPALE --- */
-        .main-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: var(--curve);
-            padding: 50px; width: 100%;
-            box-shadow: 0 50px 100px rgba(0,0,0,0.7);
-            position: relative;
-            min-height: 350px;
-            display: flex; align-items: center; justify-content: center;
-            transition: 0.5s;
-        }
+        /* --- BOTTONI E INPUT --- */
+        input { background: #222; border: 1px solid #333; color: white; padding: 15px; border-radius: 12px; width: 100%; margin-bottom: 10px; box-sizing: border-box; }
+        .btn { background: #5865F2; color: white; border: none; padding: 15px 30px; border-radius: 12px; font-weight: 700; cursor: pointer; width: 100%; }
+        .btn-gold { background: var(--primary-gold); color: black; }
 
-        /* --- SCHERMATE (HIDDEN/ACTIVE) --- */
-        .screen { display: none; width: 100%; animation: fadeIn 0.8s ease forwards; }
-        .screen.active { display: block; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* --- SCHERMATA 1: LANDING --- */
-        .landing-content { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
-        .bars-anim { display: flex; align-items: flex-end; gap: 8px; height: 150px; }
-        .bar { width: 12px; background: var(--primary-gold); border-radius: 10px; animation: barAnim 1.5s infinite ease-in-out; }
-
-        @keyframes barAnim { 0%, 100% { height: 20%; } 50% { height: 80%; } }
-
-        /* --- SCHERMATA 2: LOGIN --- */
-        .form-box { max-width: 400px; margin: 0 auto; }
-        input {
-            width: 100%; padding: 18px; margin-bottom: 15px;
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px; color: white; font-size: 1rem; box-sizing: border-box;
-            transition: 0.3s;
-        }
-        input:focus { outline: none; border-color: var(--primary-gold); background: rgba(255,255,255,0.07); }
-
-        /* --- SCHERMATA 3: DASHBOARD --- */
-        .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .status-pill { background: rgba(0,255,136,0.1); color: #00ff88; padding: 6px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; }
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        .stat-item { background: rgba(255,255,255,0.03); padding: 25px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); text-align: center; }
-        .stat-item span { color: var(--text-dim); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
-        .stat-item h3 { margin: 10px 0 0; font-size: 1.6rem; color: var(--primary-gold); }
-
-        /* --- BOTTONI --- */
-        .btn {
-            background: var(--primary-gold); color: black; border: none;
-            padding: 18px 35px; border-radius: 50px; font-weight: 800;
-            cursor: pointer; transition: 0.3s; font-size: 1rem; text-transform: uppercase;
-        }
-        .btn:hover { transform: scale(1.05); box-shadow: 0 10px 30px rgba(255, 204, 0, 0.3); }
-        .btn-outline { background: transparent; color: var(--primary-gold); border: 2px solid var(--primary-gold); margin-top: 15px; }
-
-        /* --- FOOTER AIUTO --- */
-        .help-box {
-            margin-top: 30px; width: 100%; display: flex; justify-content: space-between;
-            align-items: center; background: rgba(255,255,255,0.02);
-            padding: 15px 30px; border-radius: 25px; border-left: 5px solid var(--primary-gold);
-        }
-
+        @keyframes pulse { 0%, 100% { height: 20%; } 50% { height: 80%; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div class="bg-gradient"></div>
-    <div class="glow-orb"></div>
-
-    <div class="container">
-        
-        <header class="header">
-            <h1>GESTIONALE RP</h1>
-            <div class="divider">
-                <div class="line"></div>
-                <div class="dot"></div>
-                <div class="line"></div>
+    <div id="loginScreen">
+        <h1 style="text-align: center; font-size: 3rem; margin-bottom: 10px;">GESTIONALE ROLEPLAY</h1>
+        <div class="login-card">
+            <div class="illustration">
+                <div class="bars">
+                    <div class="bar" style="animation-delay: 0.1s"></div>
+                    <div class="bar" style="animation-delay: 0.3s"></div>
+                    <div class="bar" style="animation-delay: 0.5s"></div>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 15px;">DATABASE CONNECTED</p>
             </div>
-        </header>
-
-        <div class="main-card" id="mainCard">
-            
-            <div id="landingScreen" class="screen active">
-                <div class="landing-content">
-                    <div class="bars-anim">
-                        <div class="bar" style="animation-delay: 0.1s"></div>
-                        <div class="bar" style="animation-delay: 0.3s"></div>
-                        <div class="bar" style="animation-delay: 0.5s"></div>
-                        <div class="bar" style="animation-delay: 0.2s"></div>
-                        <div class="bar" style="animation-delay: 0.4s"></div>
-                    </div>
-                    <div>
-                        <h2>Accesso Sistema</h2>
-                        <p style="color: var(--text-dim); margin-bottom: 25px;">Sincronizza i tuoi dati di gioco con il terminale centrale del Roleplay.</p>
-                        <button class="btn" onclick="changeScreen('loginScreen')">Collega Account</button>
-                    </div>
+            <div style="flex: 1.5;">
+                <div id="authContent">
+                    <h2>Accesso richiesto</h2>
+                    <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 25px;">Effettua il login. Se non sei registrato, il sistema negherà l'accesso.</p>
+                    <input type="text" id="logUser" placeholder="Nome Utente">
+                    <input type="password" id="logPass" placeholder="Password">
+                    <button class="btn btn-gold" onclick="handleLogin()">Accedi al Gestionale</button>
+                    <p style="font-size: 0.8rem; margin-top: 15px; color: var(--text-dim);">Nuovo cittadino? <span onclick="showRegister()" style="color: var(--primary-gold); cursor: pointer;">Registrati ora</span></p>
                 </div>
             </div>
-
-            <div id="loginScreen" class="screen">
-                <div class="form-box">
-                    <h2 style="text-align:center">Autenticazione</h2>
-                    <input type="text" placeholder="Nickname In-Game" id="nickInput">
-                    <input type="password" placeholder="Password di accesso">
-                    <button class="btn" style="width:100%" onclick="loginAction()">Entra nel Gestionali</button>
-                    <p style="text-align:center; color:var(--text-dim); font-size:0.9rem; margin-top:20px;">
-                        Non hai un account? <span style="color:var(--primary-gold); cursor:pointer" onclick="changeScreen('registerScreen')">Registrati qui</span>
-                    </p>
-                </div>
-            </div>
-
-            <div id="registerScreen" class="screen">
-                <div class="form-box">
-                    <h2 style="text-align:center">Nuova Identità</h2>
-                    <div style="display:flex; gap:10px">
-                        <input type="text" placeholder="Nome">
-                        <input type="text" placeholder="Cognome">
-                    </div>
-                    <input type="text" placeholder="Nickname Minecraft">
-                    <input type="password" placeholder="Crea Password">
-                    <button class="btn" style="width:100%" onclick="loginAction()">Crea Profilo</button>
-                    <button class="btn btn-outline" style="width:100%" onclick="changeScreen('loginScreen')">Indietro</button>
-                </div>
-            </div>
-
-            <div id="dashboardScreen" class="screen">
-                <div class="dash-header">
-                    <h2 style="margin:0">Benvenuto, <span id="playerName" style="color:var(--primary-gold)">Player</span></h2>
-                    <div class="status-pill">● SERVER ONLINE</div>
-                </div>
-                
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <span>Contanti</span>
-                        <h3 id="balanceDisplay">$ 45.000</h3>
-                    </div>
-                    <div class="stat-item">
-                        <span>Occupazione</span>
-                        <h3>LSPD</h3>
-                    </div>
-                    <div class="stat-item">
-                        <span>Ore Giocate</span>
-                        <h3>124h</h3>
-                    </div>
-                </div>
-
-                <div style="margin-top:25px; display:flex; gap:15px">
-                    <button class="btn" style="padding:12px 25px; font-size:0.8rem;">Vedi Veicoli</button>
-                    <button class="btn btn-outline" style="padding:12px 25px; font-size:0.8rem; margin:0;" onclick="location.reload()">Disconnetti</button>
-                </div>
-            </div>
-
         </div>
+    </div>
 
-        <div class="help-box">
-            <span style="font-size:0.9rem">Hai bisogno di assistenza per il collegamento?</span>
-            <button style="background:red; color:white; border:none; padding:8px 15px; border-radius:12px; font-weight:bold; cursor:pointer;">TUTORIAL YT</button>
+    <div id="mainDashboard">
+        <nav class="sidebar">
+            <button class="side-btn active" onclick="showTab('tab-generale', this)">🏠</button>
+            <button class="side-btn" onclick="showTab('tab-sanzioni', this)">⚖️</button>
+            <button class="side-btn" id="staffBtn" style="display:none;" onclick="showTab('tab-staff', this)">🛡️</button>
+            <button class="side-btn" style="margin-top: 20px; background: #ff4444;" onclick="location.reload()">🚪</button>
+        </nav>
+
+        <div class="content-area">
+            <header class="profile-header">
+                <div class="avatar"><img src="https://minotar.net/avatar/Steve" id="playerImg"></div>
+                <div>
+                    <h1 style="margin:0; font-size: 2.5rem;">Buonasera, <br><span style="color: var(--primary-gold);" id="displayNick">User</span></h1>
+                </div>
+            </header>
+
+            <div id="tab-generale" class="tab-content">
+                <div class="section-title"><span>💳</span> GENERALE / Panoramica di gioco</div>
+                <div class="grid-stats">
+                    <div class="stat-box">
+                        <strong>Portafoglio</strong>
+                        <div class="inner-grid">
+                            <div class="mini-card"><span>Conto</span><p id="p-balance">0,00 €</p></div>
+                            <div class="mini-card"><span>Perle</span><p>0 💎</p></div>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <strong>Informazioni</strong>
+                        <div class="inner-grid">
+                            <div class="mini-card"><span>Telefono</span><p>Non disp.</p></div>
+                            <div class="mini-card"><span>Lavoro</span><p id="p-job">Disoccupato</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-sanzioni" class="tab-content" style="display:none;">
+                <div class="section-title"><span>⚖️</span> SANZIONI / Multe e provvedimenti</div>
+                <div class="stat-box">
+                    <p style="color: var(--text-dim);">Non hai sanzioni pendenti nel database.</p>
+                </div>
+            </div>
+
+            <div id="tab-staff" class="tab-content" style="display:none;">
+                <div class="section-title"><span>🛡️</span> STAFF / Pannello Amministrativo</div>
+                <div class="stat-box">
+                    <h3>Gestione Cittadini</h3>
+                    <input type="text" placeholder="Nickname Player">
+                    <input type="number" placeholder="Importo Multa">
+                    <button class="btn btn-gold">Invia Sanzione</button>
+                </div>
+            </div>
         </div>
-
     </div>
 
     <script>
-        // Gestore dei cambi schermata
-        function changeScreen(screenId) {
-            // Nascondi tutte le schermate
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            // Mostra quella selezionata
-            document.getElementById(screenId).classList.add('active');
+        // Simulazione database locale per i test (GitHub/Render useranno un DB vero)
+        let registeredUsers = JSON.parse(localStorage.getItem('rp_users')) || [];
+
+        function showRegister() {
+            document.getElementById('authContent').innerHTML = `
+                <h2>Registrazione</h2>
+                <input type="text" id="regUser" placeholder="Nome Minecraft">
+                <input type="password" id="regPass" placeholder="Password">
+                <button class="btn btn-gold" onclick="handleRegister()">Crea Account</button>
+                <p onclick="location.reload()" style="cursor:pointer; margin-top:10px; font-size:0.8rem;">Torna al Login</p>
+            `;
         }
 
-        // Azione di Login "finta" per testare la grafica
-        function loginAction() {
-            const nick = document.getElementById('nickInput').value || "Player";
-            const card = document.getElementById('mainCard');
+        function handleRegister() {
+            const user = document.getElementById('regUser').value;
+            const pass = document.getElementById('regPass').value;
+            if(!user || !pass) return alert("Inserisci i dati!");
+
+            registeredUsers.push({ user, pass, role: user.toLowerCase() === 'admin' ? 'staff' : 'user' });
+            localStorage.setItem('rp_users', JSON.stringify(registeredUsers));
+            alert("Registrato con successo! Ora fai il login.");
+            location.reload();
+        }
+
+        function handleLogin() {
+            const user = document.getElementById('logUser').value;
+            const pass = document.getElementById('logPass').value;
             
-            // Effetto flash di caricamento
-            card.style.transform = "scale(0.98)";
-            card.style.opacity = "0.7";
+            const found = registeredUsers.find(u => u.user === user && u.pass === pass);
 
-            setTimeout(() => {
-                document.getElementById('playerName').innerText = nick;
-                changeScreen('dashboardScreen');
-                card.style.transform = "scale(1)";
-                card.style.opacity = "1";
-                card.style.borderColor = "var(--primary-gold)";
-            }, 800);
+            if(found) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainDashboard').style.display = 'block';
+                document.getElementById('displayNick').innerText = found.user;
+                document.getElementById('playerImg').src = `https://minotar.net/avatar/${found.user}`;
+                
+                if(found.role === 'staff') document.getElementById('staffBtn').style.display = 'block';
+            } else {
+                alert("ACCOUNT NON REGISTRATO O CREDENZIALI ERRATE!");
+            }
         }
 
-        // Effetto Parallasse Mouse
-        document.addEventListener('mousemove', (e) => {
-            const card = document.getElementById('mainCard');
-            const x = (window.innerWidth / 2 - e.pageX) / 70;
-            const y = (window.innerHeight / 2 - e.pageY) / 70;
-            card.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
-        });
+        function showTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+            document.querySelectorAll('.side-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).style.display = 'block';
+            btn.classList.add('active');
+        }
     </script>
 </body>
 </html>
