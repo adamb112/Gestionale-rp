@@ -2,11 +2,11 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<title>Gestionale RP - Login</title>
+<title>Gestionale RP - Login/Registrazione</title>
 <style>
   body {
     margin:0;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg,#0f172a,#1e293b);
     color:white;
     display:flex;
@@ -14,15 +14,44 @@
     align-items:center;
     height:100vh;
     overflow:hidden;
+    position:relative;
   }
 
+  /* LINEE CURVE ANIMATE */
+  .linea {
+    position:absolute;
+    border:2px solid #2563eb;
+    border-radius:50%;
+    width:200px;
+    height:200px;
+    animation: rotate 15s linear infinite;
+    transition: border-color 0.3s;
+  }
+
+  .linea:hover { border-color:#f59e0b; }
+
+  .linea:nth-child(1){top:-50px; left:-50px;}
+  .linea:nth-child(2){bottom:-50px; right:-50px; animation-delay: 7s;}
+  .linea:nth-child(3){top:-50px; right:-50px; animation-delay: 3s;}
+  .linea:nth-child(4){bottom:-50px; left:-50px; animation-delay: 10s;}
+
+  @keyframes rotate{
+    0%{transform:rotate(0deg);}
+    100%{transform:rotate(360deg);}
+  }
+
+  /* WELCOME BOX */
   .welcome-container {
     text-align:center;
-    animation: fadeIn 2s ease forwards;
+    animation: fadeIn 1.5s ease forwards;
+    background: rgba(30,41,59,0.8);
+    padding:50px;
+    border-radius:20px;
   }
 
   .welcome-text {
-    font-size:3em;
+    font-size:4em;
+    font-weight:bold;
     margin-bottom:30px;
     opacity:0;
     animation: slideIn 2s forwards;
@@ -32,11 +61,11 @@
     background-color:#2563eb;
     padding:15px 30px;
     border:none;
-    border-radius:8px;
+    border-radius:12px;
     color:white;
     cursor:pointer;
-    font-size:1.2em;
-    transition: 0.3s;
+    font-size:1.5em;
+    transition:0.3s;
     margin-top:20px;
   }
 
@@ -44,17 +73,18 @@
     background-color:#1d4ed8;
   }
 
-  .login-box {
+  .login-box, .register-box {
     background:#1e293b;
     padding:30px;
     border-radius:12px;
     margin-top:20px;
-    max-width:300px;
+    max-width:350px;
     display:none;
     animation: fadeSlide 0.5s forwards;
+    text-align:left;
   }
 
-  .login-box input {
+  .login-box input, .register-box input {
     width:100%;
     padding:10px;
     margin-bottom:15px;
@@ -73,40 +103,55 @@
     border-radius:12px;
     margin-top:20px;
     display:inline-block;
-    min-width:200px;
+    min-width:250px;
+    font-size:1.3em;
   }
 
-  @keyframes fadeIn {
-    from{opacity:0;}
-    to{opacity:1;}
-  }
+  @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+  @keyframes slideIn { from{opacity:0; transform:translateY(-50px);} to{opacity:1; transform:translateY(0);} }
+  @keyframes fadeSlide { from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);} }
 
-  @keyframes slideIn {
-    from{opacity:0; transform:translateY(-50px);}
-    to{opacity:1; transform:translateY(0);}
-  }
-
-  @keyframes fadeSlide {
-    from{opacity:0; transform:translateY(20px);}
-    to{opacity:1; transform:translateY(0);}
-  }
 </style>
 </head>
 <body>
+
+<!-- LINEE CURVE -->
+<div class="linea"></div>
+<div class="linea"></div>
+<div class="linea"></div>
+<div class="linea"></div>
 
 <div class="welcome-container">
   <div class="welcome-text">Benvenuto</div>
   <button class="btn" id="connectBtn">Collega account</button>
 
+  <!-- LOGIN -->
   <div class="login-box" id="loginBox">
+    <h3>Login</h3>
     <form id="loginForm">
-      <input type="email" name="email" placeholder="Email" required>
+      <input type="text" name="nickname" placeholder="Nickname" required>
       <input type="password" name="password" placeholder="Password" required>
-      <button class="btn" type="submit">Login</button>
+      <button class="btn" type="submit">Accedi</button>
     </form>
+    <p>Non hai un account? <span id="showRegister" style="cursor:pointer; text-decoration:underline;">Registrati</span></p>
+  </div>
+
+  <!-- REGISTRAZIONE -->
+  <div class="register-box" id="registerBox">
+    <h3>Registrazione</h3>
+    <form id="registerForm">
+      <input type="text" name="nome" placeholder="Nome" required>
+      <input type="text" name="cognome" placeholder="Cognome" required>
+      <input type="text" name="nickingame" placeholder="Nickingame" required>
+      <input type="text" name="username" placeholder="Username per il server" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <button class="btn" type="submit">Registrati</button>
+    </form>
+    <p>Hai già un account? <span id="showLogin" style="cursor:pointer; text-decoration:underline;">Login</span></p>
   </div>
 </div>
 
+<!-- DASHBOARD -->
 <div class="dashboard" id="dashboard">
   <div class="card">
     <h2 id="nickname">Nickname: ---</h2>
@@ -117,6 +162,7 @@
 <script>
 const connectBtn = document.getElementById('connectBtn');
 const loginBox = document.getElementById('loginBox');
+const registerBox = document.getElementById('registerBox');
 const welcomeContainer = document.querySelector('.welcome-container');
 const dashboard = document.getElementById('dashboard');
 const nicknameField = document.getElementById('nickname');
@@ -127,16 +173,26 @@ connectBtn.addEventListener('click', ()=>{
   connectBtn.style.display = 'none';
 });
 
+// SWITCH LOGIN / REGISTER
+document.getElementById('showRegister').addEventListener('click', ()=>{
+  loginBox.style.display='none';
+  registerBox.style.display='block';
+});
+document.getElementById('showLogin').addEventListener('click', ()=>{
+  registerBox.style.display='none';
+  loginBox.style.display='block';
+});
+
+// LOGIN
 document.getElementById('loginForm').addEventListener('submit', async function(e){
   e.preventDefault();
-  const email = this.email.value;
+  const nickname = this.nickname.value;
   const password = this.password.value;
 
-  // POST al server
   const res = await fetch('/login', {
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({email,password})
+    body: JSON.stringify({nickname,password})
   });
 
   const text = await res.text();
@@ -145,16 +201,21 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     return;
   }
 
-  // Se login OK
-  welcomeContainer.style.display = 'none';
-  dashboard.style.display = 'block';
-
-  // Mostra dati base (Nickname e Balance)
-  nicknameField.textContent = "Nickname: " + email;
+  // Dashboard minima
+  welcomeContainer.style.display='none';
+  dashboard.style.display='block';
+  nicknameField.textContent = "Nickname: " + nickname;
   balanceField.textContent = "Balance: $0,0";
+});
+
+// REGISTRAZIONE (solo frontend, per ora)
+document.getElementById('registerForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  alert('Registrazione completata! Ora puoi fare login.');
+  registerBox.style.display='none';
+  loginBox.style.display='block';
 });
 </script>
 
 </body>
 </html>
-
