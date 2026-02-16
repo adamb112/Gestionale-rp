@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestionale Roleplay | Evolution</title>
+    <title>Gestionale Roleplay | Sistema Integrato</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #0a0a0a;
-            --card-bg: rgba(25, 25, 25, 0.7);
+            --bg-dark: #080808;
+            --card-bg: rgba(20, 20, 20, 0.8);
             --primary-gold: #ffcc00;
-            --primary-gold-dim: rgba(255, 204, 0, 0.1);
+            --accent-blue: #00d4ff;
             --text-main: #ffffff;
-            --text-dim: #888;
-            --input-bg: rgba(255, 255, 255, 0.05);
+            --text-dim: #a0a0a0;
+            --curve: 40px;
         }
 
         body {
@@ -23,212 +23,229 @@
             color: var(--text-main);
             display: flex; justify-content: center; align-items: center;
             min-height: 100vh; overflow: hidden;
-            perspective: 1000px;
         }
 
-        /* --- BACKGROUND ANIMATION --- */
-        .orb {
-            position: absolute; width: 600px; height: 600px;
-            background: radial-gradient(circle, var(--primary-gold-dim) 0%, transparent 70%);
-            z-index: -1; border-radius: 50%;
-            animation: float 15s infinite alternate;
+        /* --- SFONDO DINAMICO --- */
+        .bg-gradient {
+            position: absolute; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, #151515 0%, #080808 100%);
+            z-index: -2;
         }
-        @keyframes float { 0% { transform: translate(-20%, -20%); } 100% { transform: translate(20%, 20%); } }
 
-        /* --- CONTAINER PRINCIPALE --- */
-        .wrapper {
-            width: 100%; max-width: 900px;
+        .glow-orb {
+            position: absolute; width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(255, 204, 0, 0.05) 0%, transparent 70%);
+            z-index: -1; animation: pulse 8s infinite alternate;
+        }
+
+        @keyframes pulse { from { transform: scale(1); opacity: 0.5; } to { transform: scale(1.3); opacity: 0.8; } }
+
+        /* --- WRAPPER --- */
+        .container {
+            width: 100%; max-width: 850px;
             display: flex; flex-direction: column; align-items: center;
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         /* --- HEADER --- */
-        .header { text-align: center; margin-bottom: 40px; transition: 0.5s; }
-        .header h1 { font-weight: 800; font-size: 3rem; margin: 0; letter-spacing: -1px; }
-        .line-box { display: flex; align-items: center; justify-content: center; gap: 15px; margin-top: 10px; }
-        .line { width: 60px; height: 1px; background: var(--primary-gold); opacity: 0.5; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .header h1 { font-weight: 800; font-size: 3.5rem; margin: 0; letter-spacing: -2px; }
+        .divider { display: flex; align-items: center; justify-content: center; gap: 15px; margin-top: 10px; }
+        .divider .line { width: 80px; height: 1px; background: var(--primary-gold); }
+        .divider .dot { transform: rotate(45deg); width: 8px; height: 8px; background: var(--primary-gold); box-shadow: 0 0 10px var(--primary-gold); }
 
-        /* --- CARD SISTEMA --- */
-        .glass-card {
+        /* --- CARD PRINCIPALE --- */
+        .main-card {
             background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 40px;
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--curve);
             padding: 50px; width: 100%;
-            box-shadow: 0 40px 80px rgba(0,0,0,0.6);
-            position: relative; overflow: hidden;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.7);
+            position: relative;
+            min-height: 350px;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.5s;
         }
 
-        /* --- INPUT & FORM STYLE --- */
-        .form-section { display: none; animation: slideIn 0.5s ease-out forwards; }
-        .form-section.active { display: block; }
+        /* --- SCHERMATE (HIDDEN/ACTIVE) --- */
+        .screen { display: none; width: 100%; animation: fadeIn 0.8s ease forwards; }
+        .screen.active { display: block; }
 
-        .input-group { margin-bottom: 20px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- SCHERMATA 1: LANDING --- */
+        .landing-content { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+        .bars-anim { display: flex; align-items: flex-end; gap: 8px; height: 150px; }
+        .bar { width: 12px; background: var(--primary-gold); border-radius: 10px; animation: barAnim 1.5s infinite ease-in-out; }
+
+        @keyframes barAnim { 0%, 100% { height: 20%; } 50% { height: 80%; } }
+
+        /* --- SCHERMATA 2: LOGIN --- */
+        .form-box { max-width: 400px; margin: 0 auto; }
         input {
-            width: 100%; padding: 16px 20px;
-            background: var(--input-bg);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 18px; color: white;
-            font-family: inherit; font-size: 1rem;
-            transition: 0.3s; box-sizing: border-box;
+            width: 100%; padding: 18px; margin-bottom: 15px;
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px; color: white; font-size: 1rem; box-sizing: border-box;
+            transition: 0.3s;
         }
-        input:focus {
-            outline: none; border-color: var(--primary-gold);
-            background: rgba(255,255,255,0.08);
-            box-shadow: 0 0 15px var(--primary-gold-dim);
-        }
+        input:focus { outline: none; border-color: var(--primary-gold); background: rgba(255,255,255,0.07); }
 
-        .btn-action {
-            width: 100%; padding: 18px;
-            background: var(--primary-gold);
-            color: #000; font-weight: 800;
-            border: none; border-radius: 20px;
-            cursor: pointer; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            margin-top: 10px; text-transform: uppercase; letter-spacing: 1px;
-        }
-        .btn-action:hover { transform: scale(1.02); box-shadow: 0 10px 20px var(--primary-gold-dim); }
+        /* --- SCHERMATA 3: DASHBOARD --- */
+        .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .status-pill { background: rgba(0,255,136,0.1); color: #00ff88; padding: 6px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .stat-item { background: rgba(255,255,255,0.03); padding: 25px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); text-align: center; }
+        .stat-item span { color: var(--text-dim); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-item h3 { margin: 10px 0 0; font-size: 1.6rem; color: var(--primary-gold); }
 
-        .toggle-text {
-            text-align: center; margin-top: 20px; color: var(--text-dim); font-size: 0.9rem;
+        /* --- BOTTONI --- */
+        .btn {
+            background: var(--primary-gold); color: black; border: none;
+            padding: 18px 35px; border-radius: 50px; font-weight: 800;
+            cursor: pointer; transition: 0.3s; font-size: 1rem; text-transform: uppercase;
         }
-        .toggle-text span { color: var(--primary-gold); cursor: pointer; font-weight: 600; }
+        .btn:hover { transform: scale(1.05); box-shadow: 0 10px 30px rgba(255, 204, 0, 0.3); }
+        .btn-outline { background: transparent; color: var(--primary-gold); border: 2px solid var(--primary-gold); margin-top: 15px; }
 
-        /* --- DASHBOARD PLAYER (HIDDEN AT START) --- */
-        .dashboard-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
-            margin-top: 30px;
+        /* --- FOOTER AIUTO --- */
+        .help-box {
+            margin-top: 30px; width: 100%; display: flex; justify-content: space-between;
+            align-items: center; background: rgba(255,255,255,0.02);
+            padding: 15px 30px; border-radius: 25px; border-left: 5px solid var(--primary-gold);
         }
-        .stat-card {
-            background: rgba(255,255,255,0.03);
-            padding: 20px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.05);
-            text-align: center;
-        }
-        .stat-card h4 { margin: 0; color: var(--text-dim); font-size: 0.8rem; text-transform: uppercase; }
-        .stat-card p { margin: 10px 0 0; font-size: 1.5rem; font-weight: 800; color: var(--primary-gold); }
-
-        /* --- ANIMAZIONI --- */
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .hidden { display: none !important; }
-        .success-glow { box-shadow: 0 0 100px rgba(0, 255, 136, 0.2); }
 
     </style>
 </head>
 <body>
 
-    <div class="orb"></div>
+    <div class="bg-gradient"></div>
+    <div class="glow-orb"></div>
 
-    <div class="wrapper" id="mainWrapper">
+    <div class="container">
         
-        <header class="header" id="mainHeader">
+        <header class="header">
             <h1>GESTIONALE RP</h1>
-            <div class="line-box">
+            <div class="divider">
                 <div class="line"></div>
-                <div style="width: 10px; height: 10px; background: var(--primary-gold); transform: rotate(45deg);"></div>
+                <div class="dot"></div>
                 <div class="line"></div>
             </div>
         </header>
 
-        <div class="glass-card" id="mainCard">
+        <div class="main-card" id="mainCard">
             
-            <div id="loginSection" class="form-section active">
-                <h2 style="margin-top:0">Bentornato</h2>
-                <p style="color:var(--text-dim); margin-bottom:30px;">Inserisci le tue credenziali per accedere alla città.</p>
-                <div class="input-group">
-                    <input type="text" placeholder="Nome Utente">
+            <div id="landingScreen" class="screen active">
+                <div class="landing-content">
+                    <div class="bars-anim">
+                        <div class="bar" style="animation-delay: 0.1s"></div>
+                        <div class="bar" style="animation-delay: 0.3s"></div>
+                        <div class="bar" style="animation-delay: 0.5s"></div>
+                        <div class="bar" style="animation-delay: 0.2s"></div>
+                        <div class="bar" style="animation-delay: 0.4s"></div>
+                    </div>
+                    <div>
+                        <h2>Accesso Sistema</h2>
+                        <p style="color: var(--text-dim); margin-bottom: 25px;">Sincronizza i tuoi dati di gioco con il terminale centrale del Roleplay.</p>
+                        <button class="btn" onclick="changeScreen('loginScreen')">Collega Account</button>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <input type="password" placeholder="Password">
-                </div>
-                <button class="btn-action" onclick="showDashboard()">Accedi al Sistema</button>
-                <p class="toggle-text">Nuovo in città? <span onclick="toggleForm('registerSection')">Crea un account</span></p>
             </div>
 
-            <div id="registerSection" class="form-section">
-                <h2 style="margin-top:0">Nuova Identità</h2>
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px">
-                    <input type="text" placeholder="Nome">
-                    <input type="text" placeholder="Cognome">
+            <div id="loginScreen" class="screen">
+                <div class="form-box">
+                    <h2 style="text-align:center">Autenticazione</h2>
+                    <input type="text" placeholder="Nickname In-Game" id="nickInput">
+                    <input type="password" placeholder="Password di accesso">
+                    <button class="btn" style="width:100%" onclick="loginAction()">Entra nel Gestionali</button>
+                    <p style="text-align:center; color:var(--text-dim); font-size:0.9rem; margin-top:20px;">
+                        Non hai un account? <span style="color:var(--primary-gold); cursor:pointer" onclick="changeScreen('registerScreen')">Registrati qui</span>
+                    </p>
                 </div>
-                <br>
-                <input type="text" placeholder="Nickname In-Game" style="margin-bottom:15px">
-                <input type="password" placeholder="Password">
-                <button class="btn-action" onclick="showDashboard()">Registrati e Inizia</button>
-                <p class="toggle-text">Hai già un'identità? <span onclick="toggleForm('loginSection')">Esegui l'accesso</span></p>
             </div>
 
-            <div id="dashboardSection" class="form-section">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <h2 style="margin:0">Benvenuto, <span id="userGreet" style="color:var(--primary-gold)">Player</span></h2>
-                    <div style="padding:5px 15px; background:rgba(0,255,136,0.1); color:#00ff88; border-radius:20px; font-size:0.8rem; font-weight:bold;">● ONLINE</div>
+            <div id="registerScreen" class="screen">
+                <div class="form-box">
+                    <h2 style="text-align:center">Nuova Identità</h2>
+                    <div style="display:flex; gap:10px">
+                        <input type="text" placeholder="Nome">
+                        <input type="text" placeholder="Cognome">
+                    </div>
+                    <input type="text" placeholder="Nickname Minecraft">
+                    <input type="password" placeholder="Crea Password">
+                    <button class="btn" style="width:100%" onclick="loginAction()">Crea Profilo</button>
+                    <button class="btn btn-outline" style="width:100%" onclick="changeScreen('loginScreen')">Indietro</button>
+                </div>
+            </div>
+
+            <div id="dashboardScreen" class="screen">
+                <div class="dash-header">
+                    <h2 style="margin:0">Benvenuto, <span id="playerName" style="color:var(--primary-gold)">Player</span></h2>
+                    <div class="status-pill">● SERVER ONLINE</div>
                 </div>
                 
-                <div class="dashboard-grid">
-                    <div class="stat-card">
-                        <h4>Bilancio</h4>
-                        <p>$ 150.250</p>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span>Contanti</span>
+                        <h3 id="balanceDisplay">$ 45.000</h3>
                     </div>
-                    <div class="stat-card">
-                        <h4>Lavoro</h4>
-                        <p>Meccanico</p>
+                    <div class="stat-item">
+                        <span>Occupazione</span>
+                        <h3>LSPD</h3>
                     </div>
-                    <div class="stat-card">
-                        <h4>Livello</h4>
-                        <p>12</p>
+                    <div class="stat-item">
+                        <span>Ore Giocate</span>
+                        <h3>124h</h3>
                     </div>
                 </div>
 
-                <div style="margin-top:30px; padding:20px; background:rgba(255,255,255,0.02); border-radius:20px;">
-                    <h4 style="margin:0; font-size:0.8rem; color:var(--text-dim);">ULTIMO AVVISTAMENTO</h4>
-                    <p style="margin:5px 0 0; font-weight:600;">Stazione Centrale LSPD - 16/02/2026</p>
+                <div style="margin-top:25px; display:flex; gap:15px">
+                    <button class="btn" style="padding:12px 25px; font-size:0.8rem;">Vedi Veicoli</button>
+                    <button class="btn btn-outline" style="padding:12px 25px; font-size:0.8rem; margin:0;" onclick="location.reload()">Disconnetti</button>
                 </div>
-
-                <button class="btn-action" style="background:#ff4444; color:#fff; margin-top:30px; width:auto; padding:12px 30px;" onclick="location.reload()">Disconnetti</button>
             </div>
 
         </div>
 
-        <p style="margin-top:30px; color:var(--text-dim); font-size:0.8rem; letter-spacing:2px;">SECURE ACCESS SYSTEM 2.0</p>
+        <div class="help-box">
+            <span style="font-size:0.9rem">Hai bisogno di assistenza per il collegamento?</span>
+            <button style="background:red; color:white; border:none; padding:8px 15px; border-radius:12px; font-weight:bold; cursor:pointer;">TUTORIAL YT</button>
+        </div>
+
     </div>
 
     <script>
-        // Funzione per switchare tra Login e Register con eleganza
-        function toggleForm(sectionId) {
-            document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
+        // Gestore dei cambi schermata
+        function changeScreen(screenId) {
+            // Nascondi tutte le schermate
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            // Mostra quella selezionata
+            document.getElementById(screenId).classList.add('active');
         }
 
-        // Simulazione caricamento Dashboard
-        function showDashboard() {
+        // Azione di Login "finta" per testare la grafica
+        function loginAction() {
+            const nick = document.getElementById('nickInput').value || "Player";
             const card = document.getElementById('mainCard');
-            const wrapper = document.getElementById('mainWrapper');
             
-            // Effetto caricamento
-            card.style.opacity = '0.5';
-            card.style.transform = 'scale(0.95)';
-            
+            // Effetto flash di caricamento
+            card.style.transform = "scale(0.98)";
+            card.style.opacity = "0.7";
+
             setTimeout(() => {
-                document.getElementById('loginSection').classList.remove('active');
-                document.getElementById('registerSection').classList.remove('active');
-                document.getElementById('dashboardSection').classList.add('active');
-                
-                card.style.opacity = '1';
-                card.style.transform = 'scale(1)';
-                card.classList.add('success-glow');
-                
-                // Animazione interattiva per i numeri del balance
-                console.log("Dashboard Caricata con successo!");
-            }, 600);
+                document.getElementById('playerName').innerText = nick;
+                changeScreen('dashboardScreen');
+                card.style.transform = "scale(1)";
+                card.style.opacity = "1";
+                card.style.borderColor = "var(--primary-gold)";
+            }, 800);
         }
 
-        // Effetto movimento 3D al mouse
+        // Effetto Parallasse Mouse
         document.addEventListener('mousemove', (e) => {
-            const card = document.querySelector('.glass-card');
-            const x = (window.innerWidth / 2 - e.pageX) / 60;
-            const y = (window.innerHeight / 2 - e.pageY) / 60;
+            const card = document.getElementById('mainCard');
+            const x = (window.innerWidth / 2 - e.pageX) / 70;
+            const y = (window.innerHeight / 2 - e.pageY) / 70;
             card.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
         });
     </script>
